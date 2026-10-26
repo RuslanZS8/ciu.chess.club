@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: chess-club
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: CLUB_NAME
+        value: Chess Club
+      - key: ADMIN_STUDENT_IDS
+        sync: false

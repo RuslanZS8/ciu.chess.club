@@ -11,7 +11,7 @@ npm install
 npm start
 ```
 
-Open http://localhost:3000. **The first account you register becomes the club admin.** Admins can make other members admins from the Members page.
+Open http://localhost:3000. **The first account you register becomes the club admin**, unless `ADMIN_STUDENT_IDS` is set. Admins can make other members admins from the Members page.
 
 Settings (environment variables):
 
@@ -21,12 +21,13 @@ Settings (environment variables):
 | `CLUB_NAME`     | `Chess Club` | Name shown in the header and on the login page        |
 | `DATA_DIR`      | `./data`     | Where the SQLite database and uploaded photos are kept |
 | `COOKIE_SECURE` | `false`      | Set to `true` when serving over HTTPS                 |
+| `ADMIN_STUDENT_IDS` | (empty)  | Comma-separated student IDs that become admins when they register. Set it on hosts that wipe data on restart, so a stranger can't become admin |
 
 All data lives in `DATA_DIR` (`chess-club.db` plus `uploads/`). Back up that folder to back up the club.
 
 ## What's in it
 
-- **Registration**: student ID, first name, surname, password and a photo (JPG, PNG, WebP or GIF, up to 4 MB). Members can change their name, photo and password on their profile.
+- **Registration**: student ID, first name, surname, password, a photo (JPG, PNG, WebP or GIF, up to 4 MB) and optionally an existing Elo rating (100–3000) to start from instead of 1200. Members can change their name, photo and password on their profile.
 - **Events**: admins create, edit and delete events. A new event is announced in the chat automatically. Members RSVP with "I'm going".
 - **Club chat**: real-time chat for all members. Admins can post highlighted announcements, which also pop up as notifications for everyone online, and can delete messages. The chat has an "Announcements" filter.
 - **Online tournaments**

@@ -42,6 +42,7 @@ export function render(root, { onAuthed }) {
         <label class="field"><span>First name</span><input name="firstName" autocomplete="given-name" required></label>
         <label class="field"><span>Surname</span><input name="lastName" autocomplete="family-name" required></label>
       </div>
+      <label class="field"><span>Elo rating (optional)</span><input name="rating" type="number" inputmode="numeric" min="100" max="3000" step="1" placeholder="1200"><small>Your FIDE, national or online rating. Leave blank to start at 1200.</small></label>
       <label class="field"><span>Password</span><input name="password" type="password" autocomplete="new-password" minlength="6" required><small>At least 6 characters</small></label>
       <button class="btn block" type="submit">Create account</button>
       <p class="auth-switch">Already a member? <a href="#" data-switch>Log in</a></p>

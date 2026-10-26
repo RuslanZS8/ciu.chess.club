@@ -16,6 +16,7 @@ import * as tournaments from './tournaments.js';
 const PORT = Number(process.env.PORT) || 3000;
 const CLUB_NAME = process.env.CLUB_NAME || 'Chess Club';
 const COOKIE_SECURE = process.env.COOKIE_SECURE === 'true';
+const ADMIN_STUDENT_IDS = new Set((process.env.ADMIN_STUDENT_IDS ?? '').split(',').map((s) => s.trim()).filter(Boolean));
 const SESSION_DAYS = 30;
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -158,17 +159,23 @@ app.post('/api/register', ...withPhoto((req, res) => {
   const password = String(req.body.password ?? '');
   if (password.length < 6) throw new HttpError(400, 'Password must be at least 6 characters');
   if (!req.file) throw new HttpError(400, 'Add a photo so opponents can recognise you');
+  // Optional: players who already have an Elo (FIDE, national, online) start from it.
+  const elo = String(req.body.rating ?? '').trim();
+  const rating = elo === '' ? 1200 : int(elo, 'Elo rating', { min: 100, max: 3000 });
 
   const exists = db.prepare('SELECT 1 FROM users WHERE student_id = ?').get(studentId);
   if (exists) throw new HttpError(409, 'An account with this student ID already exists. Log in instead.');
 
   const user = tx(() => {
-    // The first person to register runs the club.
-    const role = db.prepare('SELECT COUNT(*) AS n FROM users').get().n === 0 ? 'admin' : 'member';
+    // Listed student IDs run the club; without a list, the first person to register does.
+    const isAdmin = ADMIN_STUDENT_IDS.size
+      ? ADMIN_STUDENT_IDS.has(studentId)
+      : db.prepare('SELECT COUNT(*) AS n FROM users').get().n === 0;
+    const role = isAdmin ? 'admin' : 'member';
     const r = db.prepare(`
-      INSERT INTO users (student_id, first_name, last_name, password_hash, photo, role, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?)`)
-      .run(studentId, firstName, lastName, bcrypt.hashSync(password, 10), req.file.filename, role, now());
+      INSERT INTO users (student_id, first_name, last_name, password_hash, photo, role, rating, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
+      .run(studentId, firstName, lastName, bcrypt.hashSync(password, 10), req.file.filename, role, rating, now());
     return getUser(Number(r.lastInsertRowid));
   });
   startSession(res, user.id);
