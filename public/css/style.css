@@ -124,7 +124,8 @@ h1, h2, h3 { margin: 0; line-height: 1.15; }
 .topbar, .tabbar { display: none; }
 
 @media (max-width: 860px) {
-  .shell { grid-template-columns: 1fr; }
+  /* Without the explicit rows, short pages stretch the topbar to fill 100vh */
+  .shell { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
   .side { display: none; }
   .topbar {
     display: flex; align-items: center; justify-content: space-between;
