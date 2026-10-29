@@ -475,6 +475,7 @@ app.use('/uploads', express.static(UPLOAD_DIR, {
   setHeaders: (res) => res.setHeader('X-Content-Type-Options', 'nosniff'),
 }));
 app.get('/vendor/chess.js', (_req, res) => res.sendFile(path.join(root, 'node_modules/chess.js/dist/esm/chess.js')));
+app.get('/vendor/three.js', (_req, res) => res.sendFile(path.join(root, 'node_modules/three/build/three.module.min.js')));
 app.use(express.static(path.join(root, 'public')));
 
 app.use('/api', (_req, _res, next) => next(new HttpError(404, 'Not found')));

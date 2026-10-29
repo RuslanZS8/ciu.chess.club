@@ -65,6 +65,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--felt); outline-offset: 2px; }
 [hidden] { display: none !important; }
 
+/* 3D pieces drawn behind everything (public/js/backdrop.js); kept faint so text stays readable */
+#backdrop {
+  position: fixed; inset: 0; z-index: -1;
+  width: 100%; height: 100%;
+  pointer-events: none; opacity: 0.55;
+}
+
 h1, h2, h3 { margin: 0; line-height: 1.15; }
 .display {
   font-stretch: 125%;
@@ -210,6 +217,7 @@ dialog .actions { justify-content: flex-end; margin-top: 8px; }
 
 .empty {
   padding: 28px; border: 1px dashed var(--line); border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--paper) 80%, transparent);
   color: var(--muted); text-align: center;
 }
 .empty strong { display: block; color: var(--ink); margin-bottom: 4px; }
@@ -264,7 +272,7 @@ dialog .actions { justify-content: flex-end; margin-top: 8px; }
   background: repeating-conic-gradient(var(--on-felt) 0 25%, transparent 0 50%) 0 0 / 50% 50%;
   opacity: 0.16; transform: rotate(-12deg);
 }
-.auth-form { display: grid; place-items: center; padding: 40px 24px; background: var(--surface); }
+.auth-form { display: grid; place-items: center; padding: 40px 24px; }
 .auth-form form { width: min(400px, 100%); }
 .auth-form h2 { font-size: 30px; margin-bottom: 6px; }
 .auth-form .lead { margin: 0 0 24px; color: var(--muted); }
